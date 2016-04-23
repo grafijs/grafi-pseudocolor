@@ -1,7 +1,7 @@
 {
   "name": "grafi-pseudocolor",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "pseudocolor module for grafi.js",
   "main": "grafi-pseudocolor.js",
   "scripts": {
     "test": "node grafi-pseudocolor.test.js",

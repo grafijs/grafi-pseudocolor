@@ -1,27 +1,33 @@
 /**
   ## pseudocolor method
-  Brief description
+  Gibe grayscaled image rainbow pseudocolor
+  TODO: support different pseudocolor scheme
 
   ### Parameters
     - imageData `Object`: ImageData object
     - option `Object` : Option object
+        - grayscaled `Boolean` : input imageData is grayscaled or not
 
   ### Example
-      //code sample goes here
+      var input = { data: Uint8ClampedArray[400], width: 10, height: 10 }
+      // turn image into pseudocolor
+      grafi.pseudocolor(input)
+      // if input image is already grayscaled, pass grayscaeled flag to bypass redundant grayscaling
+      grafi.pseudocolor(input, {grayscaled: true})
  */
 function pseudocolor (imgData, option) {
+  // sanitary check for input data
+  checkColorDepth(imgData)
+
   // check options object & set default variables
   option = option || {}
+  option.grayscaled = option.grayscaled || false
 
-  // Check length of data & avilable pixel size to make sure data is good data
   var pixelSize = imgData.width * imgData.height
-  var dataLength = imgData.data.length
-  var colorDepth = dataLength / pixelSize
-  if (colorDepth !== 4) {
-    throw new Error('ImageObject has incorrect color depth')
+  var grayscaledData = imgData.data
+  if (!option.grayscaled) {
+    grayscaledData = grayscale(imgData).data
   }
-
-  var grayschaledData = grayscale(imgData).data
   var newPixelData = new Uint8ClampedArray(pixelSize * 4)
   var redLookupTable = new Uint8ClampedArray(256)
   var greenLookupTable = new Uint8ClampedArray(256)
@@ -60,13 +66,13 @@ function pseudocolor (imgData, option) {
     blueLookupTable[i] = n
   })
 
-  var p, _index
-  for (p = 0; p < pixelSize; p++) {
-    _index = p * 4
-    newPixelData[_index] = redLookupTable[grayschaledData[_index]]
-    newPixelData[_index + 1] = greenLookupTable[grayschaledData[_index + 1]]
-    newPixelData[_index + 2] = blueLookupTable[grayschaledData[_index + 2]]
-    newPixelData[_index + 3] = imgData.data[_index + 3]
+  var pixel, index
+  for (pixel = 0; pixel < pixelSize; pixel++) {
+    index = pixel * 4
+    newPixelData[index] = redLookupTable[grayscaledData[index]]
+    newPixelData[index + 1] = greenLookupTable[grayscaledData[index + 1]]
+    newPixelData[index + 2] = blueLookupTable[grayscaledData[index + 2]]
+    newPixelData[index + 3] = imgData.data[index + 3]
   }
 
   return formatter(newPixelData, imgData.width, imgData.height)
