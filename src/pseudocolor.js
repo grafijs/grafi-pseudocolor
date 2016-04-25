@@ -12,7 +12,7 @@
       var input = { data: Uint8ClampedArray[400], width: 10, height: 10 }
       // turn image into pseudocolor
       grafi.pseudocolor(input)
-      // if input image is already grayscaled, pass grayscaeled flag to bypass redundant grayscaling
+      // if input image is already grayscaled, pass grayscaled flag to bypass redundant grayscaling
       grafi.pseudocolor(input, {grayscaled: true})
  */
 function pseudocolor (imgData, option) {
